@@ -1,5 +1,5 @@
 -- 
--- 建立cy公司訂便當資料庫
+-- 建立cy公司訂便當系統資料庫
 -- 
 
 CREATE DATABASE cyorderingsystem DEFAULT CHARACTER SET utf8;
@@ -46,7 +46,7 @@ CREATE TABLE `users`
   `email` varchar(35) NULL,
   `phone` varchar(11) NOT NULL,
   `verified` enum('N', 'Y') NOT NULL DEFAULT 'N',
-   constraint `fk_users_user_type` foreign key (character) references user_type (id) ON UPDATE CASCADE
+   constraint `fk_users_user_type` foreign key (`character`) references user_type (id) ON UPDATE CASCADE
 );
 
 -- 
@@ -56,11 +56,11 @@ CREATE TABLE `users`
 INSERT INTO users
 (`id`,`character`,`name` ,`password`,`email`,`phone`,`verified`)
 VALUES
-('ashita','admin','明日','a89455184fa09bbb0c723fbba3ca974c','vmido95rajai@presanec.cf','0941609501','Y'),
-('vovo','user','豪','366066babbad95297715b0c5719391ab','eabooodehasane6@300da.ga','0966529139','Y'),
-('jefida','user','多多','893ff64fd6efa30963bc3dd6962fc326','0sadeq.khaza@ciesperu.com','0946013379','Y'),
-('mary','user','鏡花水月','84399aae728d810cb01ea8ea655c1a52','6enaba.ch@bvzoonm.com','0950116511','Y'),
-('hellen','user','華鳥風月','61c6bf51be4515bb3b12ec220e2970d7','gjacinto5@gmailup.com','0993221682','Y');
+('ashita',2,'明日','a89455184fa09bbb0c723fbba3ca974c','vmido95rajai@presanec.cf','0941609501','Y'),
+('vovo',1,'豪','366066babbad95297715b0c5719391ab','eabooodehasane6@300da.ga','0966529139','Y'),
+('jefida',1,'多多','893ff64fd6efa30963bc3dd6962fc326','0sadeq.khaza@ciesperu.com','0946013379','Y'),
+('mary',1,'鏡花水月','84399aae728d810cb01ea8ea655c1a52','6enaba.ch@bvzoonm.com','0950116511','Y'),
+('hellen',1,'華鳥風月','61c6bf51be4515bb3b12ec220e2970d7','gjacinto5@gmailup.com','0993221682','Y');
 
 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
 
