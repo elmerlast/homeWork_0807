@@ -1,0 +1,180 @@
+CREATE DATABASE cyorderingsystem DEFAULT CHARACTER SET utf8;
+
+use cyorderingsystem;
+
+CREATE TABLE `users` 
+(
+  `id` varchar(15) NOT NULL PRIMARY KEY,
+  `character` varchar(10) NOT NULL DEFAULT '顧客',
+  `name` varchar(15) NOT NULL,
+  `password` varchar(20) NOT NULL,
+  `email` varchar(35) NULL,
+  `phone` varchar(11) NOT NULL,
+  `verified` enum('N', 'Y') NOT NULL DEFAULT 'N'
+);
+
+INSERT INTO users
+(`id`,`character`,`name` ,`password`,`email`,`phone`,`verified`)
+VALUES
+('ashita','admin','明日','a89455184fa09bbb0c723fbba3ca974c','vmido95rajai@presanec.cf','0941609501','Y'),
+('vovo','user','豪','366066babbad95297715b0c5719391ab','eabooodehasane6@300da.ga','0966529139','Y'),
+('jefida','user','多多','893ff64fd6efa30963bc3dd6962fc326','0sadeq.khaza@ciesperu.com','0946013379','Y'),
+('mary','user','鏡花水月','84399aae728d810cb01ea8ea655c1a52','6enaba.ch@bvzoonm.com','0950116511','Y'),
+('hellen','user','華鳥風月','61c6bf51be4515bb3b12ec220e2970d7','gjacinto5@gmailup.com','0993221682','Y');
+
+
+CREATE TABLE `restaurant` (
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `name` varchar(50) DEFAULT NULL,
+  `address` varchar(60) DEFAULT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `description` varchar(100) DEFAULT NULL
+  );
+
+INSERT INTO restaurant
+(`name`,`address`,`phone`,`description`)
+VALUES
+('Bistro88 light 台中崇德店','台中市北屯區崇德路三段125號','04-2422 1518','全日早午餐和輕食為主，但也有義大利麵!'),
+('沐muweichai','台中市北區育才街3巷5號','','早午餐有大量新鮮生菜，外型像貝果的麵包口感意外酥脆有特色!'),
+('韓大王 馬鈴薯豬骨湯','台中市西屯區福星北二街11號','04-2452 9511','專賣馬鈴薯排骨湯，小菜可以無限續加'),
+('一笈壽司','台中市南屯區公益路二段25號','04-2320-6368','輕井澤鍋物相關企業，日式餐盤和酒類。'),
+('馬遜 手工粉圓 。冷淬咖啡。茶','台中市北屯區崇德路二段67號(金福氣旁騎樓)','0986-833-489','特殊口味的手工粉圓茶飲攤。');
+
+
+
+
+
+CREATE TABLE `item_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+INSERT INTO item_type
+(`name`)
+VALUES
+('飯食'),
+('麵食'),
+('小吃'),
+('套餐'),
+('飲品'),
+('冰品'),
+('甜點');
+
+
+
+
+CREATE TABLE `items`
+(
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `name` varchar(35) NOT NULL,
+  `price` int(11) NOT NULL,
+  `rest_id` int(20) NOT NULL,
+  `type_id` int(11) NOT NULL,
+  constraint `fk_item_restaurant_id` foreign key (rest_id) references restaurant (id) ON UPDATE CASCADE ON DELETE CASCADE ,
+  constraint `fk_item_type_id` foreign key (type_id) references item_type (id) ON UPDATE CASCADE ON DELETE CASCADE 
+);
+
+INSERT INTO `items`
+(`name`,`price`,`rest_id`,`type_id`)
+VALUES
+('楓糖南瓜法式早餐',160,1,4),
+('肉醬義大利麵',280,1,2),
+('經典凱薩羅蔓沙拉',170,1,3),
+('生乳奇亞籽布丁',190,1,7),
+('煙花女她很蝦',259,2,3),
+('南洋風情',198,2,4),
+('羅馬假期',238,2,4),
+('煙花女義麵',259,2,2),
+('馬鈴薯骨湯 一人份',230,3,3),
+('韓式壽喜燒 一人份',230,3,3),
+('韓式壽年糕鍋',220,3,3),
+('牛肉泡菜鍋',190,3,3),
+('綜合8貫套餐',318,4,4),
+('春暖花開十貫套餐',368,4,4),
+('炙燒六貫套餐',228,4,4),
+('炸蝦鮭魚卷',198,4,4),
+('巧克力粉圓+鮮奶(M)',50,5,5),
+('巧克力鮮奶(M)',50,5,5),
+('冷淬咖啡',45,5,5),
+('燒粉圓(袋裝)',30,5,5);
+
+
+CREATE TABLE `status` (
+  `id` int(11) NOT NULL PRIMARY KEY,
+  `status` varchar(25) NOT NULL
+);
+INSERT INTO `status`
+(`id`,`status`)
+VALUES
+(1,'餐點還未送達'),
+(2,'已結帳'),
+(3,'有疑問的訂單');
+
+
+CREATE TABLE `orders` (
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `user_id` varchar(15) NOT NULL,
+  `description` varchar(300) NULL,
+  `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `total` int(11) NOT NULL,
+  `stat_id` int(11) NOT NULL DEFAULT 1,
+   constraint `fk_orders_user_id` foreign key (user_id) references users (id) ON UPDATE CASCADE ON DELETE CASCADE,
+   constraint `fk_orders_status_id` foreign key (stat_id) references `status` (id) 
+);
+
+INSERT INTO `orders`
+(`user_id`,`description`,`total`,`stat_id`)
+VALUES
+('mary','希望能盡快送達',380,1),
+('vovo','',250,3),
+('jefida','',470,1);
+
+
+
+
+
+
+
+
+CREATE TABLE `order_details` (
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `orders_id` int(11) NOT NULL,
+  `items_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `price` int(11) NOT NULL,
+   constraint `fk_order_details_orders_id` foreign key (orders_id) references orders (id) ON UPDATE CASCADE ON DELETE CASCADE,
+  constraint `fk_order_details_items_id` foreign key (items_id) references items (id) ON UPDATE CASCADE ON DELETE CASCADE 
+);
+
+
+INSERT INTO `order_details`
+(`orders_id`,`items_id`,`quantity`,`price`)
+VALUES
+(1,12,2,190),
+(2,18,5,50),
+(3,2,280,1),
+(3,4,190,1);
+
+
+
+
+CREATE TABLE `event` (
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `rest_id` int(11) NOT NULL,
+  `start_time` int(11) unsigned NOT NULL,
+  `end_time` int(11) unsigned NOT NULL,
+ /*使用unix時間戳儲存時間資料方便截止時間的計算*/
+  `user_id` varchar(15) NOT NULL,
+  UNIQUE KEY `event_id_uindex` (`id`),
+  constraint `fk_event_restaurant_id` foreign key (rest_id) references restaurant (id) ON UPDATE CASCADE ON DELETE CASCADE ,
+  constraint `fk_event_userls_id` foreign key (user_id) references users (id) ON UPDATE CASCADE ON DELETE CASCADE 
+);
+
+INSERT INTO `event`
+(`rest_id`,`start_time`,`end_time`,`user_id`)
+VALUES
+(3,1606824396,1606870800,'hellen'),
+(5,1606825353,1606890300,'ashita');
+
+
