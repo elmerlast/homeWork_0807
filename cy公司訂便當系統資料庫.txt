@@ -1,5 +1,5 @@
 -- 
--- 建立cy公司訂便當資料庫
+-- 建立cy公司訂便當系統的資料庫
 -- 
 
 CREATE DATABASE cyorderingsystem DEFAULT CHARACTER SET utf8;
